@@ -25,7 +25,8 @@ public class AlarmProvider extends ContentProvider {
     private static UriMatcher sUriMatcher;
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(DBInfo.AUTHORITY, DBInfo.AlarmTable.TABLE_NAME, ALARM_TABLE);
+        sUriMatcher.addURI(DBInfo.AUTHORITY, DBInfo.AlarmTable.TABLE_NAME,
+                ALARM_TABLE);
     }
 
     @Override
@@ -60,11 +61,13 @@ public class AlarmProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection,
+            String[] selectionArgs, String sortOrder) {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(getTableName(uri));
-        return qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        return qb.query(db, projection, selection, selectionArgs, null, null,
+                sortOrder);
     }
 
     @Override
@@ -91,9 +94,11 @@ public class AlarmProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String selection,
+            String[] selectionArgs) {
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        int result = db.update(getTableName(uri), values, selection, selectionArgs);
+        int result = db.update(getTableName(uri), values, selection,
+                selectionArgs);
         if (result > 0) {
             notifyChange(uri, null);
         }
@@ -119,7 +124,8 @@ public class AlarmProvider extends ContentProvider {
         }
 
         private void createAlarmTable(SQLiteDatabase db) {
-            String sql = "CREATE TABLE " + AlarmTable.TABLE_NAME + "( " + AlarmTable._ID + " INTEGER PRIMARY KEY,"//
+            String sql = "CREATE TABLE " + AlarmTable.TABLE_NAME + "( "
+                    + AlarmTable._ID + " INTEGER PRIMARY KEY,"//
                     + AlarmTable.NAME + " TEXT,"//
                     + AlarmTable.IS_ENABLE + " INTEGER,"//
                     + AlarmTable.HOUR + " INTEGER,"//

@@ -1,5 +1,6 @@
 package com.jk.alienalarm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jk.alienalarm.R;
@@ -9,13 +10,12 @@ import com.jk.alienalarm.db.DBHelper;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class AlarmListAdapter extends BaseAdapter {
 
@@ -26,11 +26,12 @@ public class AlarmListAdapter extends BaseAdapter {
     public AlarmListAdapter(Context context, DBHelper dbHelper) {
         mContext = context;
         mDBHelper = dbHelper;
-        mAlarmList = mDBHelper.getAlarmList(false);
+        mAlarmList = new ArrayList<AlarmInfo>();
     }
 
     /**
-     * @param alarmList the mAlarmList to set
+     * @param alarmList
+     *            the mAlarmList to set
      */
     public void setAlarmList(List<AlarmInfo> alarmList) {
         mAlarmList = alarmList;
@@ -66,8 +67,9 @@ public class AlarmListAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.item_alarm, null);
             viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.switcher = (Switch) convertView.findViewById(R.id.switcher);
-            viewHolder.switcher.setOnCheckedChangeListener(mListener);
+            viewHolder.switcher = (Switch) convertView
+                    .findViewById(R.id.switcher);
+            viewHolder.switcher.setOnClickListener(mListener);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -84,15 +86,18 @@ public class AlarmListAdapter extends BaseAdapter {
         Switch switcher;
     }
 
-    OnCheckedChangeListener mListener = new OnCheckedChangeListener() {
+    OnClickListener mListener = new OnClickListener() {
         @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Object obj = buttonView.getTag();
+        public void onClick(View v) {
+            Object obj = v.getTag();
             if (obj != null) {
                 int position = (Integer) obj;
-                int ret = mDBHelper.setAlarmEnable(mAlarmList.get(position).id, isChecked);
+                Switch switcher = (Switch) v;
+                int ret = mDBHelper.setAlarmEnable(mAlarmList.get(position).id,
+                        switcher.isChecked());
                 if (ret < 1) {
-                    Toast.makeText(mContext, R.string.saving_fail, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.saving_fail,
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -7,7 +7,6 @@ import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -44,14 +43,19 @@ public class AlarmEditActivity extends Activity {
             public void onClick(View v) {
                 String name = mEditName.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(AlarmEditActivity.this, R.string.pls_enter_name, Toast.LENGTH_SHORT).show();
-                    return;
+                    Toast.makeText(AlarmEditActivity.this,
+                            R.string.pls_enter_name, Toast.LENGTH_SHORT).show();
+                } else {
+                    if (mAlarmId == -1) {
+                        mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(),
+                                mTimePicker.getCurrentMinute());
+                    } else {
+                        mDBHelper.modifyAlarm(mAlarmId, name,
+                                mTimePicker.getCurrentHour(),
+                                mTimePicker.getCurrentMinute());
+                    }
+                    finish();
                 }
-                mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute());
-
-                finish();
-                Intent intent = new Intent(AlarmEditActivity.this, AlarmListActivity.class);
-                startActivity(intent);
             }
         });
 
