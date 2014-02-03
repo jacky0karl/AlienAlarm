@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AlienAlarm</string>
+    <string name="enter_name_hint">enter name</string>
+    <string name="new_alarm">New Alarm</string>
+    <string name="alarm_list">Alarm List</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="saving_fail">Saving fail</string>
+    <string name="pls_enter_name">Please enter a name for alarm</string>
+
+</resources>
