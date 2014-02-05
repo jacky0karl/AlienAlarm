@@ -1,16 +1,24 @@
 package com.jk.alienalarm;
 
-import java.util.TimerTask;
+import com.jk.alienalarm.db.DBInfo.AlarmTable;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 public class AlarmService extends Service {
+
+    private ContentObserver mObserver = new ContentObserver(null) {
+        @Override
+        public void onChange(boolean selfChange) {
+            Log.e("AlarmService", "ContentObserver");
+        }
+    };
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -20,7 +28,17 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("AlarmService", "onStartCommand");
+        getContentResolver().registerContentObserver(AlarmTable.CONTENT_URI,
+                false, mObserver);
+
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e("AlarmService", "onDestroy");
+        getContentResolver().unregisterContentObserver(mObserver);
+        super.onDestroy();
     }
 
     void wakeScreen() {
@@ -32,10 +50,4 @@ public class AlarmService extends Service {
         lock.acquire(5000);
     }
 
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            wakeScreen();
-        }
-    };
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ public class AlarmEditActivity extends Activity {
     private DBHelper mDBHelper;
     private TimePicker mTimePicker;
     private EditText mEditName;
+    private Spinner mTimes;
     private Button mOkButton;
     private Button mCancelButton;
     private long mAlarmId = -1;
@@ -48,11 +50,13 @@ public class AlarmEditActivity extends Activity {
                 } else {
                     if (mAlarmId == -1) {
                         mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(),
-                                mTimePicker.getCurrentMinute());
+                                mTimePicker.getCurrentMinute(),
+                                mTimes.getSelectedItemPosition());
                     } else {
                         mDBHelper.modifyAlarm(mAlarmId, name,
                                 mTimePicker.getCurrentHour(),
-                                mTimePicker.getCurrentMinute());
+                                mTimePicker.getCurrentMinute(),
+                                mTimes.getSelectedItemPosition());
                     }
                     finish();
                 }
@@ -68,8 +72,9 @@ public class AlarmEditActivity extends Activity {
         });
 
         mEditName = (EditText) findViewById(R.id.name);
+        mTimes = (Spinner) findViewById(R.id.times);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-        mTimePicker.setIs24HourView(true);
+        // mTimePicker.setIs24HourView(true);
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -80,9 +85,11 @@ public class AlarmEditActivity extends Activity {
             AlarmInfo info = mDBHelper.getAlarm(mAlarmId);
             if (info != null) {
                 mEditName.setText(info.name);
+                mTimes.setSelection(info.times);
                 mTimePicker.setCurrentHour(info.hour);
                 mTimePicker.setCurrentMinute(info.minute);
             }
         }
     }
+
 }

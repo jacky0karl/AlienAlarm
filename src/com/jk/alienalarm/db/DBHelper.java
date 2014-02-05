@@ -18,12 +18,13 @@ public class DBHelper {
         mContext = context;
     }
 
-    public void newAlarm(String name, int hour, int minute) {
+    public void newAlarm(String name, int hour, int minute, int times) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.IS_ENABLE, 1);
         values.put(AlarmTable.HOUR, hour);
         values.put(AlarmTable.MINUTE, minute);
+        values.put(AlarmTable.TIMES, times);
 
         Uri uri = mContext.getContentResolver().insert(AlarmTable.CONTENT_URI,
                 values);
@@ -42,11 +43,12 @@ public class DBHelper {
         }
     }
 
-    public int modifyAlarm(long id, String name, int hour, int minute) {
+    public int modifyAlarm(long id, String name, int hour, int minute, int times) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.HOUR, hour);
         values.put(AlarmTable.MINUTE, minute);
+        values.put(AlarmTable.TIMES, times);
 
         String selection = AlarmTable._ID + "=" + id;
         return mContext.getContentResolver().update(AlarmTable.CONTENT_URI,
@@ -104,6 +106,7 @@ public class DBHelper {
         info.name = cursor.getString(cursor.getColumnIndex(AlarmTable.NAME));
         info.hour = cursor.getInt(cursor.getColumnIndex(AlarmTable.HOUR));
         info.minute = cursor.getInt(cursor.getColumnIndex(AlarmTable.MINUTE));
+        info.times = cursor.getInt(cursor.getColumnIndex(AlarmTable.TIMES));
         return info;
     }
 }

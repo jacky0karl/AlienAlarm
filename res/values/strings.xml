@@ -12,5 +12,12 @@
     <string name="cancel">Cancel</string>
     <string name="saving_fail">Saving fail</string>
     <string name="pls_enter_name">Please enter a name for alarm</string>
+    <string name="choose_alarm_times">Choose Alarm Times</string>
+
+    <string-array name="alarm_times">
+        <item>Once</item>
+        <item>Twice</item>
+        <item>Thrice</item>
+    </string-array>
 
 </resources>

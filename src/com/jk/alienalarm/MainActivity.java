@@ -21,6 +21,9 @@ public class MainActivity extends Activity {
 
         mDBHelper = new DBHelper(this);
         mClock = (DigitalClock) findViewById(R.id.clock);
+        
+        Intent intent = new Intent(this, AlarmService.class);
+        startService(intent);
     }
 
     @Override
@@ -43,24 +46,6 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    // Date getTime() {
-    // int hour = mTimePicker.getCurrentHour();
-    // int minute = mTimePicker.getCurrentMinute();
-    //
-    // Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-    // SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-    // String date = sdf.format(System.currentTimeMillis());
-    // try {
-    // calendar.setTime(new SimpleDateFormat("yyyyMMdd").parse(date));
-    // } catch (ParseException e) {
-    // e.printStackTrace();
-    // }
-    // long time = calendar.getTimeInMillis();
-    // time += (hour * 60 + minute) * 60 * 1000;
-    //
-    // Date dateTime = new Date();
-    // dateTime.setTime(time);
-    // return dateTime;
-    // }
+    
 
 }

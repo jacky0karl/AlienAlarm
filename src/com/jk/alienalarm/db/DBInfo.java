@@ -42,5 +42,12 @@ public final class DBInfo {
          * </P>
          */
         public static final String MINUTE = "minute";
+        /**
+         * alarm times for alarm.
+         * <P>
+         * Type: INTEGER
+         * </P>
+         */
+        public static final String TIMES = "times";
     }
 }
