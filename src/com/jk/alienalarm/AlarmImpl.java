@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
 
 import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
@@ -145,19 +144,16 @@ public class AlarmImpl {
     }
 
     public void wakeScreen() {
-        Log.e("wakeScreen", "wakeScreen");
         PowerManager pm = (PowerManager) mContext
                 .getSystemService(Context.POWER_SERVICE);
         WakeLock lock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
                 | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                | PowerManager.ON_AFTER_RELEASE, "test");
+                | PowerManager.ON_AFTER_RELEASE, "jk");
         lock.acquire(5000);
     }
 
     public static long getTime(int hour, int minute) {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        int currHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currMinute = calendar.get(Calendar.MINUTE);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String date = sdf.format(System.currentTimeMillis());
         try {
