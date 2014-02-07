@@ -130,7 +130,8 @@ public class AlarmProvider extends ContentProvider {
                     + AlarmTable.IS_ENABLE + " INTEGER,"//
                     + AlarmTable.HOUR + " INTEGER,"//
                     + AlarmTable.MINUTE + " INTEGER,"//
-                    + AlarmTable.TIMES + " INTEGER);";
+                    + AlarmTable.TIMES + " INTEGER,"//
+                    + AlarmTable.INTERVAL + " INTEGER);";
             db.execSQL(sql);
         }
     }

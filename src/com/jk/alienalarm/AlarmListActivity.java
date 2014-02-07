@@ -32,7 +32,7 @@ public class AlarmListActivity extends Activity implements OnItemClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_list);
 
-        mDBHelper = new DBHelper(this);
+        mDBHelper = new DBHelper(getApplication());
         initView();
     }
 

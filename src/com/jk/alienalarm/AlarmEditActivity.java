@@ -24,6 +24,7 @@ public class AlarmEditActivity extends Activity {
     private TimePicker mTimePicker;
     private EditText mEditName;
     private Spinner mTimes;
+    private Spinner mInterval;
     private Button mOkButton;
     private Button mCancelButton;
     private long mAlarmId = -1;
@@ -51,12 +52,14 @@ public class AlarmEditActivity extends Activity {
                     if (mAlarmId == -1) {
                         mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(),
                                 mTimePicker.getCurrentMinute(),
-                                mTimes.getSelectedItemPosition());
+                                mTimes.getSelectedItemPosition(),
+                                mInterval.getSelectedItemPosition());
                     } else {
                         mDBHelper.modifyAlarm(mAlarmId, name,
                                 mTimePicker.getCurrentHour(),
                                 mTimePicker.getCurrentMinute(),
-                                mTimes.getSelectedItemPosition());
+                                mTimes.getSelectedItemPosition(),
+                                mInterval.getSelectedItemPosition());
                     }
                     finish();
                 }
@@ -73,6 +76,7 @@ public class AlarmEditActivity extends Activity {
 
         mEditName = (EditText) findViewById(R.id.name);
         mTimes = (Spinner) findViewById(R.id.times);
+        mInterval = (Spinner) findViewById(R.id.interval);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
         // mTimePicker.setIs24HourView(true);
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -86,6 +90,7 @@ public class AlarmEditActivity extends Activity {
             if (info != null) {
                 mEditName.setText(info.name);
                 mTimes.setSelection(info.times);
+                mInterval.setSelection(info.interval);
                 mTimePicker.setCurrentHour(info.hour);
                 mTimePicker.setCurrentMinute(info.minute);
             }

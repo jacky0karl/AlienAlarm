@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 
 public final class DBInfo {
     private static final String TYPE = "vnd.android.cursor.dir/vnd.google.";
-    public static final String AUTHORITY = "com.jk.alienalarm.AlarmProvider";
+    public static final String AUTHORITY = "com.jk.alienalarm.db.AlarmProvider";
 
     public static final class AlarmTable implements BaseColumns {
         public static final String TABLE_NAME = "alarm";
@@ -49,5 +49,12 @@ public final class DBInfo {
          * </P>
          */
         public static final String TIMES = "times";
+        /**
+         * interval for alarm.
+         * <P>
+         * Type: INTEGER
+         * </P>
+         */
+        public static final String INTERVAL = "interval";
     }
 }

@@ -24,14 +24,25 @@
 
     <Spinner
         android:id="@+id/times"
-        android:layout_width="210dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"       
+        android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
         android:layout_marginTop="20dp"
-        android:spinnerMode="dialog"
+        android:entries="@array/alarm_times"
         android:prompt="@string/choose_alarm_times"
-        android:entries="@array/alarm_times" />
+        android:spinnerMode="dialog" />
+
+    <Spinner
+        android:id="@+id/interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/name"
+        android:layout_below="@+id/name"
+        android:layout_marginTop="20dp"
+        android:entries="@array/alarm_interval"
+        android:prompt="@string/choose_alarm_interval"
+        android:spinnerMode="dialog" />
 
     <Button
         android:id="@+id/cancel_button"
@@ -49,7 +60,5 @@
         android:layout_alignBottom="@+id/cancel_button"
         android:layout_alignRight="@+id/name"
         android:text="@string/ok" />
-
-    
 
 </RelativeLayout>

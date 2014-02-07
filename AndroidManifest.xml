@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.jk.alienalarm.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,19 +25,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.jk.alienalarm.AlarmEditActivity"
+            android:name=".AlarmEditActivity"
             android:label="@string/new_alarm" >
         </activity>
         <activity
-            android:name="com.jk.alienalarm.AlarmListActivity"
+            android:name=".AlarmListActivity"
             android:label="@string/alarm_list" >
         </activity>
+        <activity
+            android:name=".NotifyActivity"
+            android:label="@string/alarm_arrived"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
 
-        <service android:name="com.jk.alienalarm.AlarmService" />
+        <service android:name=".AlarmService" />
 
         <provider
-            android:name="com.jk.alienalarm.db.AlarmProvider"
-            android:authorities="com.jk.alienalarm.AlarmProvider"
+            android:name=".db.AlarmProvider"
+            android:authorities="com.jk.alienalarm.db.AlarmProvider"
             android:exported="false" />
     </application>
 

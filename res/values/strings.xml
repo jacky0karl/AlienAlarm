@@ -4,20 +4,30 @@
     <string name="app_name">AlienAlarm</string>
     <string name="enter_name_hint">enter name</string>
     <string name="new_alarm">New</string>
+    <string name="alarm_arrived">Alarm Arrived</string>
     <string name="delete">Delete</string>
     <string name="alarm_list">Alarm List</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="stop">Stop</string>
+    <string name="later">Later</string>
     <string name="saving_fail">Saving fail</string>
     <string name="pls_enter_name">Please enter a name for alarm</string>
     <string name="choose_alarm_times">Choose Alarm Times</string>
+    <string name="choose_alarm_interval">Choose Alarm Interval</string>
 
     <string-array name="alarm_times">
         <item>Once</item>
         <item>Twice</item>
         <item>Thrice</item>
+    </string-array>
+    <string-array name="alarm_interval">
+        <item>5 minute</item>
+        <item>10 minute</item>
+        <item>15 minute</item>
+        <item>30 minute</item>
     </string-array>
 
 </resources>

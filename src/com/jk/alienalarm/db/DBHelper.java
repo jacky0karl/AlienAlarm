@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jk.alienalarm.db.DBInfo.AlarmTable;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,13 +19,15 @@ public class DBHelper {
         mContext = context;
     }
 
-    public void newAlarm(String name, int hour, int minute, int times) {
+    public void newAlarm(String name, int hour, int minute, int times,
+            int interval) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.IS_ENABLE, 1);
         values.put(AlarmTable.HOUR, hour);
         values.put(AlarmTable.MINUTE, minute);
         values.put(AlarmTable.TIMES, times);
+        values.put(AlarmTable.INTERVAL, interval);
 
         Uri uri = mContext.getContentResolver().insert(AlarmTable.CONTENT_URI,
                 values);
@@ -43,12 +46,14 @@ public class DBHelper {
         }
     }
 
-    public int modifyAlarm(long id, String name, int hour, int minute, int times) {
+    public int modifyAlarm(long id, String name, int hour, int minute,
+            int times, int interval) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.HOUR, hour);
         values.put(AlarmTable.MINUTE, minute);
         values.put(AlarmTable.TIMES, times);
+        values.put(AlarmTable.INTERVAL, interval);
 
         String selection = AlarmTable._ID + "=" + id;
         return mContext.getContentResolver().update(AlarmTable.CONTENT_URI,
@@ -84,8 +89,9 @@ public class DBHelper {
         }
 
         List<AlarmInfo> alarmList = new ArrayList<AlarmInfo>();
-        Cursor cursor = mContext.getContentResolver().query(
-                AlarmTable.CONTENT_URI, null, selection, null, null);
+        ContentResolver resolver = mContext.getContentResolver();
+        Cursor cursor = resolver.query(AlarmTable.CONTENT_URI, null, selection,
+                null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
@@ -107,6 +113,8 @@ public class DBHelper {
         info.hour = cursor.getInt(cursor.getColumnIndex(AlarmTable.HOUR));
         info.minute = cursor.getInt(cursor.getColumnIndex(AlarmTable.MINUTE));
         info.times = cursor.getInt(cursor.getColumnIndex(AlarmTable.TIMES));
+        info.interval = cursor.getInt(cursor
+                .getColumnIndex(AlarmTable.INTERVAL));
         return info;
     }
 }

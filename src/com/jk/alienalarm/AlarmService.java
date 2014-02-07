@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -13,10 +14,11 @@ import android.util.Log;
 
 public class AlarmService extends Service {
 
-    private ContentObserver mObserver = new ContentObserver(null) {
+    private ContentObserver mObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
-            Log.e("AlarmService", "ContentObserver");
+            AlarmImpl.getInstance().updateAlarmInfo();
+            AlarmImpl.getInstance().updateAllAlarms();
         }
     };
 
@@ -31,6 +33,9 @@ public class AlarmService extends Service {
         getContentResolver().registerContentObserver(AlarmTable.CONTENT_URI,
                 false, mObserver);
 
+        this.getApplicationContext();
+        AlarmImpl.getInstance().setContext(getApplication());
+        // AlarmImpl.getInstance().updateAllAlarms();
         return START_STICKY;
     }
 
@@ -39,15 +44,6 @@ public class AlarmService extends Service {
         Log.e("AlarmService", "onDestroy");
         getContentResolver().unregisterContentObserver(mObserver);
         super.onDestroy();
-    }
-
-    void wakeScreen() {
-        Log.e("wakeScreen", "wakeScreen");
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        WakeLock lock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                | PowerManager.ON_AFTER_RELEASE, "test");
-        lock.acquire(5000);
     }
 
 }
