@@ -1,6 +1,7 @@
 package com.jk.alienalarm;
 
 import com.jk.alienalarm.db.DBHelper;
+import com.jk.alienalarm.service.AlarmService;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -15,6 +16,12 @@ import android.widget.DigitalClock;
 
 public class MainActivity extends Activity {
 
+    //To do list
+    //notification
+    //flash light
+    //setting: alarm length 
+    //setting: theme dark or light
+    
     private DigitalClock mClock;
     private DBHelper mDBHelper;
 

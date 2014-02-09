@@ -74,15 +74,11 @@ public class AlarmImpl {
     }
 
     public void resetAlarm(AlarmInfo info, int alarmTime) {
-        if (alarmTime >= info.times) {
-            mIntentMap.remove(info.id);
-            return;
-        }
-
         PendingIntent alarmIntent = AlarmImpl.getInstance().getPendingIntent(
                 info, alarmTime + 1);
         AlarmImpl.getInstance().updatePendingIntent(info.id, alarmIntent);
 
+        //FIXME
         long plusTime = 1000;
         switch (info.interval) {
         case AlarmInfo.FIVE_MINUTE:
@@ -107,6 +103,7 @@ public class AlarmImpl {
 
     public PendingIntent getPendingIntent(AlarmInfo info, int alarmTime) {
         Intent intent = new Intent(mContext, NotifyActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Uri data = Uri.parse("alarm/" + info.id);
         intent.setData(data);
         intent.putExtra(NotifyActivity.ALARM_ID, info.id);

@@ -1,5 +1,6 @@
-package com.jk.alienalarm;
+package com.jk.alienalarm.service;
 
+import com.jk.alienalarm.AlarmImpl;
 import com.jk.alienalarm.db.DBInfo.AlarmTable;
 
 import android.app.Service;

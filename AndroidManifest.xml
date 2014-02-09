@@ -8,6 +8,7 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.VIBRATE" /> 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
@@ -36,10 +37,12 @@
         <activity
             android:name=".NotifyActivity"
             android:label="@string/alarm_arrived"
+            android:launchMode="singleTop"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
 
-        <service android:name=".AlarmService" />
+        <service android:name=".service.AlarmService" />
+        <service android:name=".service.NotifyService" />
 
         <provider
             android:name=".db.AlarmProvider"
