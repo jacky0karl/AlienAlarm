@@ -12,6 +12,13 @@ public class AlarmInfo {
     public static final int FIFTEEN_MINUTE = 2;
     public static final int HALF_AN_HOUR = 3;
 
+    /** for alarm repeatability */
+    public static final int NO_REPEAT = 0;
+    public static final int WEEKDAY_REPEAT = 1;
+    public static final int SATURDAY_REPEAT = 2;
+    public static final int SUNDAY_REPEAT = 4;
+    public static final int EVERYDAY_REPEAT = 7;
+
     public long id;
     public String name;
     public boolean isEnable;
@@ -19,4 +26,5 @@ public class AlarmInfo {
     public int minute;
     public int times = ONCE;
     public int interval = FIVE_MINUTE;
+    public int repeatability = NO_REPEAT;
 }

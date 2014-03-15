@@ -1,64 +1,105 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="15dp" >
+    android:layout_height="wrap_content" >
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
+        android:padding="25dp" >
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/timePicker"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="@string/enter_name_hint"
-        android:inputType="textPersonName" >
-    </EditText>
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
 
-    <Spinner
-        android:id="@+id/times"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_below="@+id/name"
-        android:layout_marginTop="20dp"
-        android:entries="@array/alarm_times"
-        android:prompt="@string/choose_alarm_times"
-        android:spinnerMode="dialog" />
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timePicker"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/enter_name_hint"
+            android:inputType="textPersonName" >
+        </EditText>
 
-    <Spinner
-        android:id="@+id/interval"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/name"
-        android:layout_below="@+id/name"
-        android:layout_marginTop="20dp"
-        android:entries="@array/alarm_interval"
-        android:prompt="@string/choose_alarm_interval"
-        android:spinnerMode="dialog" />
+        <TextView
+            android:id="@+id/times_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="30dp"
+            android:text="@string/times"
+            android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/name"
-        android:layout_alignParentBottom="true"
-        android:text="@string/cancel" />
+        <Spinner
+            android:id="@+id/times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/times_lable"
+            android:layout_alignRight="@id/name"
+            android:entries="@array/alarm_times"
+            android:prompt="@string/choose_alarm_times"
+            android:spinnerMode="dialog" />
 
-    <Button
-        android:id="@+id/ok_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cancel_button"
-        android:layout_alignBottom="@+id/cancel_button"
-        android:layout_alignRight="@+id/name"
-        android:text="@string/ok" />
+        <TextView
+            android:id="@+id/interval_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@+id/times_lable"
+            android:layout_marginTop="30dp"
+            android:text="@string/interval"
+            android:textSize="18sp" />
 
-</RelativeLayout>
+        <Spinner
+            android:id="@+id/interval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/interval_lable"
+            android:layout_alignRight="@id/name"
+            android:entries="@array/alarm_interval"
+            android:prompt="@string/choose_alarm_interval"
+            android:spinnerMode="dialog" />
+
+        <TextView
+            android:id="@+id/repeatability_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@+id/interval_lable"
+            android:layout_marginTop="30dp"
+            android:text="@string/repeatability"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/repeatability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/repeatability_lable"
+            android:layout_alignRight="@id/name"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/name"
+            android:layout_below="@+id/repeatability_lable"
+            android:layout_marginTop="30dp"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cancel_button"
+            android:layout_alignRight="@+id/name"
+            android:text="@string/ok" />
+    </RelativeLayout>
+
+</ScrollView>

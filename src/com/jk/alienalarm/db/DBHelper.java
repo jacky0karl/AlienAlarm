@@ -20,7 +20,7 @@ public class DBHelper {
     }
 
     public void newAlarm(String name, int hour, int minute, int times,
-            int interval) {
+            int interval, int repeatability) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.IS_ENABLE, 1);
@@ -28,6 +28,7 @@ public class DBHelper {
         values.put(AlarmTable.MINUTE, minute);
         values.put(AlarmTable.TIMES, times);
         values.put(AlarmTable.INTERVAL, interval);
+        values.put(AlarmTable.REPEATABILTTY, repeatability);
 
         Uri uri = mContext.getContentResolver().insert(AlarmTable.CONTENT_URI,
                 values);
@@ -47,13 +48,14 @@ public class DBHelper {
     }
 
     public int modifyAlarm(long id, String name, int hour, int minute,
-            int times, int interval) {
+            int times, int interval, int repeatability) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.HOUR, hour);
         values.put(AlarmTable.MINUTE, minute);
         values.put(AlarmTable.TIMES, times);
         values.put(AlarmTable.INTERVAL, interval);
+        values.put(AlarmTable.REPEATABILTTY, repeatability);
 
         String selection = AlarmTable._ID + "=" + id;
         return mContext.getContentResolver().update(AlarmTable.CONTENT_URI,
@@ -115,6 +117,8 @@ public class DBHelper {
         info.times = cursor.getInt(cursor.getColumnIndex(AlarmTable.TIMES));
         info.interval = cursor.getInt(cursor
                 .getColumnIndex(AlarmTable.INTERVAL));
+        info.repeatability = cursor.getInt(cursor
+                .getColumnIndex(AlarmTable.REPEATABILTTY));
         return info;
     }
 }

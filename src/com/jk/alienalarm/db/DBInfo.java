@@ -56,5 +56,12 @@ public final class DBInfo {
          * </P>
          */
         public static final String INTERVAL = "interval";
+        /**
+         * repeatability for alarm.
+         * <P>
+         * Type: INTEGER
+         * </P>
+         */
+        public static final String REPEATABILTTY = "repeatability";
     }
 }

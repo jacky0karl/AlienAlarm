@@ -13,10 +13,16 @@
     <string name="cancel">Cancel</string>
     <string name="stop">Stop</string>
     <string name="later">Later</string>
+    <string name="no_repeat">No Repeat</string>
+    <string name="everyday">Everyday</string>
     <string name="saving_fail">Saving fail</string>
     <string name="pls_enter_name">Please enter a name for alarm</string>
+    <string name="times">Times</string>
+    <string name="interval">Interval</string>
+    <string name="repeatability">Repeatability</string>
     <string name="choose_alarm_times">Choose Alarm Times</string>
     <string name="choose_alarm_interval">Choose Alarm Interval</string>
+    <string name="choose_alarm_repeatability">Choose Alarm Repeatability</string>
 
     <string-array name="alarm_times">
         <item>Once</item>
@@ -28,6 +34,11 @@
         <item>10 minute</item>
         <item>15 minute</item>
         <item>30 minute</item>
+    </string-array>
+    <string-array name="alarm_repeatability">
+        <item>weekday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
     </string-array>
 
 </resources>
