@@ -133,16 +133,25 @@ public class AlarmEditActivity extends Activity {
             public void onClick(DialogInterface dialog, int which,
                     boolean isChecked) {
                 mSelectedItems[which] = isChecked;
+                if (mAlarmId == NO_ALARM_ID) {
+                    mInfo = new AlarmInfo();
+                }
                 mInfo.repeatability = RepeatabilityHelper
                         .calcRepeatability(mSelectedItems);
+
                 mRepeatabilityTv.setText(RepeatabilityHelper
                         .genRepeatabilityString(getApplicationContext(),
                                 mSelectedItems));
             }
         };
 
-        mSelectedItems = RepeatabilityHelper
-                .parseRepeatability(mInfo.repeatability);
+        if (mAlarmId == NO_ALARM_ID) {
+            mSelectedItems = new boolean[] { false, false, false };
+        } else {
+            mSelectedItems = RepeatabilityHelper
+                    .parseRepeatability(mInfo.repeatability);
+        }
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.choose_alarm_repeatability)
                 .setMultiChoiceItems(R.array.alarm_repeatability,
