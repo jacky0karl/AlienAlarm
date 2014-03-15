@@ -4,13 +4,10 @@ import com.jk.alienalarm.AlarmImpl;
 import com.jk.alienalarm.db.DBInfo.AlarmTable;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.util.Log;
 
 public class AlarmService extends Service {
@@ -18,7 +15,6 @@ public class AlarmService extends Service {
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
-            AlarmImpl.getInstance().updateAlarmInfo();
             AlarmImpl.getInstance().updateAllAlarms();
         }
     };
@@ -34,9 +30,8 @@ public class AlarmService extends Service {
         getContentResolver().registerContentObserver(AlarmTable.CONTENT_URI,
                 false, mObserver);
 
-        this.getApplicationContext();
         AlarmImpl.getInstance().setContext(getApplication());
-        // AlarmImpl.getInstance().updateAllAlarms();
+        AlarmImpl.getInstance().updateAllAlarms();
         return START_STICKY;
     }
 

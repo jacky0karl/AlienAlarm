@@ -64,4 +64,28 @@ public class RepeatabilityHelper {
         }
         return text;
     }
+
+    public static boolean contains(int repeatability, int dayOfWeek) {
+        boolean[] array = buildCheckingArray(parseRepeatability(repeatability));
+        return array[dayOfWeek];
+    }
+
+    private static boolean[] buildCheckingArray(boolean[] selectedItems) {
+        boolean[] array = new boolean[] { false, false, false, false, false,
+                false, false };
+        if (selectedItems[0] == true) {
+            array[1] = true;
+            array[2] = true;
+            array[3] = true;
+            array[4] = true;
+            array[5] = true;
+        }
+        if (selectedItems[1] == true) {
+            array[6] = true;
+        }
+        if (selectedItems[2] == true) {
+            array[0] = true;
+        }
+        return array;
+    }
 }

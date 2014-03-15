@@ -142,7 +142,7 @@ public class NotifyActivity extends Activity {
     }
 
     public void onStopClick(View v) {
-        AlarmImpl.getInstance().cancelAlarm(mAlarmInfo.id);
+        AlarmImpl.getInstance().updateAlarm(mAlarmInfo.id);
         finish();
     }
 
@@ -153,6 +153,7 @@ public class NotifyActivity extends Activity {
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
+            AlarmImpl.getInstance().updateAlarm(mAlarmInfo.id);
             finish();
         }
     };
