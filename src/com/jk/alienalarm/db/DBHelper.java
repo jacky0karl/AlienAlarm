@@ -106,6 +106,25 @@ public class DBHelper {
         return alarmList;
     }
 
+    public AlarmInfo getNextAlarm() {
+        List<AlarmInfo> alarmList = getAlarmList(true);
+        long curr = System.currentTimeMillis();
+        long diff = Long.MAX_VALUE;
+        AlarmInfo nextAlarm = null;
+        for (AlarmInfo info : alarmList) {
+            if (info.nextAlarmDate == AlarmInfo.DEAD_ALARM) {
+                continue;
+            }
+
+            long tmp = info.nextAlarmDate - curr;
+            if (tmp < diff) {
+                diff = tmp;
+                nextAlarm = info;
+            }
+        }
+        return nextAlarm;
+    }
+
     private AlarmInfo fillAlarmInfo(Cursor cursor) {
         AlarmInfo info = new AlarmInfo();
         info.id = cursor.getLong(cursor.getColumnIndex(AlarmTable._ID));
@@ -119,6 +138,7 @@ public class DBHelper {
                 .getColumnIndex(AlarmTable.INTERVAL));
         info.repeatability = cursor.getInt(cursor
                 .getColumnIndex(AlarmTable.REPEATABILTTY));
+        info.nextAlarmDate = info.getDateAndTime(false);
         return info;
     }
 }

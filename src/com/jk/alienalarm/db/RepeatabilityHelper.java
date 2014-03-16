@@ -9,13 +9,18 @@ public class RepeatabilityHelper {
 
     public static boolean[] parseRepeatability(int repeatability) {
         boolean[] selectedItems = new boolean[] { false, false, false };
-        if ((repeatability & AlarmInfo.WEEKDAY_REPEAT) == 1) {
+        int bitWeekday = repeatability & AlarmInfo.WEEKDAY_REPEAT;
+        if (bitWeekday == 1) {
             selectedItems[0] = true;
         }
-        if ((repeatability & AlarmInfo.SATURDAY_REPEAT) == 1) {
+
+        int bitSaturday = repeatability & AlarmInfo.SATURDAY_REPEAT;
+        if ((bitSaturday >> 1) == 1) {
             selectedItems[1] = true;
         }
-        if ((repeatability & AlarmInfo.SUNDAY_REPEAT) == 1) {
+
+        int bitSunday = repeatability & AlarmInfo.SUNDAY_REPEAT;
+        if ((bitSunday >> 2) == 1) {
             selectedItems[2] = true;
         }
         return selectedItems;
@@ -65,7 +70,7 @@ public class RepeatabilityHelper {
         return text;
     }
 
-    public static boolean contains(int repeatability, int dayOfWeek) {
+    public static boolean matches(int repeatability, int dayOfWeek) {
         boolean[] array = buildCheckingArray(parseRepeatability(repeatability));
         return array[dayOfWeek];
     }

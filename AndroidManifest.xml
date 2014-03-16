@@ -37,12 +37,11 @@
         <activity
             android:name=".NotifyActivity"
             android:label="@string/alarm_arrived"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
         </activity>
 
         <service android:name=".service.AlarmService" />
-        <service android:name=".service.NotifyService" />
 
         <provider
             android:name=".db.AlarmProvider"

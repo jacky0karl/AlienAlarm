@@ -132,7 +132,7 @@ public class NotifyActivity extends Activity {
     private void resetView() {
         mName.setText(mAlarmInfo.name);
         if (mLastAlarm) {
-            mLaterButton.setVisibility(View.GONE);
+            mLaterButton.setVisibility(View.INVISIBLE);
         }
     }
 

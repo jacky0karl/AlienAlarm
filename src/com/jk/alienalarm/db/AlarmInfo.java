@@ -1,5 +1,10 @@
 package com.jk.alienalarm.db;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class AlarmInfo {
     /** for alarm times */
     public static final int ONCE = 0;
@@ -19,6 +24,8 @@ public class AlarmInfo {
     public static final int SUNDAY_REPEAT = 4;
     public static final int EVERYDAY_REPEAT = 7;
 
+    public static final int DEAD_ALARM = -1;
+
     public long id;
     public String name;
     public boolean isEnable;
@@ -27,4 +34,66 @@ public class AlarmInfo {
     public int times = ONCE;
     public int interval = FIVE_MINUTE;
     public int repeatability = NO_REPEAT;
+    public long nextAlarmDate;
+
+    public long getDateAndTime(boolean isRealarm) {
+        Calendar calendar = null;
+        if (isRealarm) {
+            calendar = Calendar.getInstance(TimeZone.getDefault());
+            calendar.setTimeInMillis(System.currentTimeMillis());
+        } else {
+            calendar = getAlarmDate();
+            if (calendar == null) {
+                return DEAD_ALARM;
+            }
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(calendar.getTime());
+        try {
+            calendar.setTime(new SimpleDateFormat("yyyyMMdd").parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long time = calendar.getTimeInMillis();
+        time += (hour * 60 + minute) * 60 * 1000;
+        return time;
+    }
+
+    public Calendar getAlarmDate() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        if (needAlarmToday()) {
+            return calendar;
+        }
+
+        if (repeatability == NO_REPEAT) {
+            return null;
+        } else {
+            // plus one day every time till it matches the repeatability
+            int daysOfWeek = 7;
+            while (daysOfWeek-- >= 0) {
+                calendar.set(Calendar.DAY_OF_YEAR,
+                        calendar.get(Calendar.DAY_OF_YEAR) + 1);
+                int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                boolean contains = RepeatabilityHelper.matches(repeatability,
+                        week);
+
+                if (contains) {
+                    break;
+                }
+            }
+            return calendar;
+        }
+    }
+
+    private boolean needAlarmToday() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int currHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currMin = calendar.get(Calendar.MINUTE) + (currHour * 60);
+        int min = minute + (hour * 60);
+        return currMin < min ? true : false;
+    }
 }

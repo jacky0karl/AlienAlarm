@@ -1,14 +1,10 @@
 package com.jk.alienalarm;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -20,10 +16,9 @@ import android.os.PowerManager.WakeLock;
 
 import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
-import com.jk.alienalarm.db.RepeatabilityHelper;
 
 public class AlarmImpl {
-    private static final int DEAD_ALARM = -1;
+    private static final int PLUS_TIME_STEP = 60 * 1000;
 
     private static AlarmImpl mSelf = null;
     private DBHelper mDBhelper = null;
@@ -60,11 +55,10 @@ public class AlarmImpl {
         cancelAlarm(id);
 
         AlarmInfo info = getInfoById(id);
-        long date = getDateAndTime(info, false);
-        if (date != DEAD_ALARM) {
+        if (info.nextAlarmDate != AlarmInfo.DEAD_ALARM) {
             PendingIntent intent = getPendingIntent(info, 0);
             mIntentMap.put(info.id, intent);
-            mAlarmMgr.set(AlarmManager.RTC_WAKEUP, date, intent);
+            mAlarmMgr.set(AlarmManager.RTC_WAKEUP, info.nextAlarmDate, intent);
         }
     }
 
@@ -74,8 +68,8 @@ public class AlarmImpl {
     }
 
     public void resetAlarm(AlarmInfo info, int alarmTime) {
-        long date = getDateAndTime(info, true);
-        if (date == DEAD_ALARM) {
+        long date = info.getDateAndTime(true);
+        if (date == AlarmInfo.DEAD_ALARM) {
             return;
         }
 
@@ -83,20 +77,19 @@ public class AlarmImpl {
                 info, alarmTime + 1);
         AlarmImpl.getInstance().updatePendingIntent(info.id, alarmIntent);
 
-        // FIXME
-        long plusTime = 1000;
+        long plusTime = 0;
         switch (info.interval) {
         case AlarmInfo.FIVE_MINUTE:
-            plusTime *= 5;
+            plusTime = 5 * PLUS_TIME_STEP;
             break;
         case AlarmInfo.TEN_MINUTE:
-            plusTime *= 10;
+            plusTime = 10 * PLUS_TIME_STEP;
             break;
         case AlarmInfo.FIFTEEN_MINUTE:
-            plusTime *= 15;
+            plusTime = 15 * PLUS_TIME_STEP;
             break;
         case AlarmInfo.HALF_AN_HOUR:
-            plusTime *= 30;
+            plusTime = 30 * PLUS_TIME_STEP;
             break;
         default:
             break;
@@ -108,7 +101,7 @@ public class AlarmImpl {
 
     public PendingIntent getPendingIntent(AlarmInfo info, int alarmTime) {
         Intent intent = new Intent(mContext, NotifyActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         Uri data = Uri.parse("alarm/" + info.id);
         intent.setData(data);
         intent.putExtra(NotifyActivity.ALARM_ID, info.id);
@@ -138,11 +131,11 @@ public class AlarmImpl {
 
         for (int i = 0; i < mAlarmList.size(); i++) {
             AlarmInfo info = mAlarmList.get(i);
-            long date = getDateAndTime(info, false);
-            if (date != DEAD_ALARM) {
+            if (info.nextAlarmDate != AlarmInfo.DEAD_ALARM) {
                 PendingIntent intent = getPendingIntent(info, 0);
                 mIntentMap.put(info.id, intent);
-                mAlarmMgr.set(AlarmManager.RTC_WAKEUP, date, intent);
+                mAlarmMgr.set(AlarmManager.RTC_WAKEUP, info.nextAlarmDate,
+                        intent);
             }
         }
     }
@@ -156,63 +149,4 @@ public class AlarmImpl {
         lock.acquire(5000);
     }
 
-    public long getDateAndTime(AlarmInfo info, boolean isRealarm) {
-        Calendar calendar = null;
-        if (isRealarm) {
-            calendar = Calendar.getInstance(TimeZone.getDefault());
-            calendar.setTimeInMillis(System.currentTimeMillis());
-        } else {
-            calendar = getAlarmDate(info);
-            if (calendar == null) {
-                return DEAD_ALARM;
-            }
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(calendar.getTime());
-        try {
-            calendar.setTime(new SimpleDateFormat("yyyyMMdd").parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        long time = calendar.getTimeInMillis();
-        time += (info.hour * 60 + info.minute) * 60 * 1000;
-        return time;
-    }
-
-    public Calendar getAlarmDate(AlarmInfo info) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        if (info.repeatability == AlarmInfo.NO_REPEAT) {
-            if (needAlarmToday(info)) {
-                return calendar;
-            } else {
-                return null;
-            }
-        } else {
-            // plus one day every time till it matches the repeatability
-            while (true) {
-                int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-                boolean contains = RepeatabilityHelper.contains(
-                        info.repeatability, week);
-                if (contains) {
-                    return calendar;
-                } else {
-                    calendar.set(Calendar.DAY_OF_YEAR,
-                            calendar.get(Calendar.DAY_OF_YEAR) + 1);
-                }
-            }
-        }
-    }
-
-    private boolean needAlarmToday(AlarmInfo info) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int currHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int currMin = calendar.get(Calendar.MINUTE) + (currHour * 60);
-        int min = info.minute + (info.hour * 60);
-        return currMin < min ? true : false;
-    }
 }

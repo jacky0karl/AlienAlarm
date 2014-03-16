@@ -103,7 +103,10 @@ public class AlarmEditActivity extends Activity {
 
     private void initSettings() {
         if (mAlarmId == NO_ALARM_ID) {
+            mInfo = new AlarmInfo();
+            mInfo.repeatability = AlarmInfo.NO_REPEAT;
             mRepeatabilityTv.setText(R.string.no_repeat);
+
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
@@ -133,12 +136,8 @@ public class AlarmEditActivity extends Activity {
             public void onClick(DialogInterface dialog, int which,
                     boolean isChecked) {
                 mSelectedItems[which] = isChecked;
-                if (mAlarmId == NO_ALARM_ID) {
-                    mInfo = new AlarmInfo();
-                }
                 mInfo.repeatability = RepeatabilityHelper
                         .calcRepeatability(mSelectedItems);
-
                 mRepeatabilityTv.setText(RepeatabilityHelper
                         .genRepeatabilityString(getApplicationContext(),
                                 mSelectedItems));

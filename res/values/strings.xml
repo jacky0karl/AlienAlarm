@@ -23,6 +23,7 @@
     <string name="choose_alarm_times">Choose Alarm Times</string>
     <string name="choose_alarm_interval">Choose Alarm Interval</string>
     <string name="choose_alarm_repeatability">Choose Alarm Repeatability</string>
+    <string name="next_alarm">Next Alarm</string>
 
     <string-array name="alarm_times">
         <item>Once</item>

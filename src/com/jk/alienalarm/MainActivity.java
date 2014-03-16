@@ -1,50 +1,67 @@
 package com.jk.alienalarm;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
 import com.jk.alienalarm.service.AlarmService;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.DigitalClock;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    //To do list
-    //notification
-    //flash light
-    //setting: alarm length 
-    //setting: theme dark or light
-    
-    private DigitalClock mClock;
+    // To do list
+    // notification
+    // flash light
+    // setting: alarm length
+    // setting: theme dark or light
+
+    private TextView mNextAlarmName;
+    private TextView mNextAlarmTime;
     private DBHelper mDBHelper;
+    private AlarmInfo mNextAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDBHelper = new DBHelper(this);
-        mClock = (DigitalClock) findViewById(R.id.clock);
-        
-        Intent intent = new Intent(this, AlarmService.class);      
+        init();
+        Intent intent = new Intent(this, AlarmService.class);
         startService(intent);
-        
-        
-//        Intent intent2 = new Intent(this, NotifyActivity.class);
-//        Uri data = Uri.parse("alarm/" + 5);
-//        intent2.setData(data);
-//        PendingIntent in = PendingIntent.getActivity(this, 0, intent2,
-//                PendingIntent.FLAG_UPDATE_CURRENT);
-//        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000,
-//                in);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNextAlarm();
+    }
+
+    private void init() {
+        mNextAlarmName = (TextView) findViewById(R.id.alarm_name);
+        mNextAlarmTime = (TextView) findViewById(R.id.alarm_time);
+        mDBHelper = new DBHelper(this);
+        updateNextAlarm();
+    }
+
+    private void updateNextAlarm() {
+        mNextAlarm = mDBHelper.getNextAlarm();
+        if (mNextAlarm != null) {
+            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+            calendar.setTimeInMillis(mNextAlarm.nextAlarmDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String date = sdf.format(calendar.getTime());
+            mNextAlarmName.setText(mNextAlarm.name);
+            mNextAlarmTime.setText(date);
+        }
     }
 
     @Override
@@ -68,7 +85,4 @@ public class MainActivity extends Activity {
         }
         return true;
     }
-
-    
-
 }
