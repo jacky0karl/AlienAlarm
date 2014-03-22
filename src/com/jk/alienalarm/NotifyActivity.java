@@ -49,15 +49,17 @@ public class NotifyActivity extends Activity {
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         mKeyguardLock = keyguardManager.newKeyguardLock("jk");
         mHandler = new Handler();
-        initActions();
     }
 
-    private void initActions() {
+    private void resetActions() {
         mActionList = new ArrayList<AlarmAction>();
-        SoundAction soundAction = new SoundAction();
+        SoundAction soundAction = new SoundAction(mAlarmInfo.ringtone);
         VibrationAction vibrationAction = new VibrationAction(this);
         mActionList.add(soundAction);
         mActionList.add(vibrationAction);
+
+        stopActions();
+        startActions();
     }
 
     private void startActions() {
@@ -115,8 +117,7 @@ public class NotifyActivity extends Activity {
             AlarmImpl.getInstance().resetAlarm(mAlarmInfo, mAlarmTime);
         }
 
-        stopActions();
-        startActions();
+        resetActions();
     }
 
     private void resetVariables() {

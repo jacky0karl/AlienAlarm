@@ -34,6 +34,8 @@ public class AlarmInfo {
     public int times = ONCE;
     public int interval = FIVE_MINUTE;
     public int repeatability = NO_REPEAT;
+    public boolean vibrate;
+    public String ringtone;
     public long nextAlarmDate;
 
     public long getDateAndTime(boolean isReAlarm) {
@@ -74,11 +76,9 @@ public class AlarmInfo {
             // plus one day every time till it matches the repeatability
             int daysOfWeek = 7;
             while (daysOfWeek-- >= 0) {
-                calendar.set(Calendar.DAY_OF_YEAR,
-                        calendar.get(Calendar.DAY_OF_YEAR) + 1);
+                calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + 1);
                 int week = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-                boolean contains = RepeatabilityHelper.matches(repeatability,
-                        week);
+                boolean contains = RepeatabilityHelper.matches(repeatability, week);
 
                 if (contains) {
                     break;

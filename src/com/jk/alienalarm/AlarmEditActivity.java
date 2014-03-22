@@ -11,7 +11,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +35,8 @@ public class AlarmEditActivity extends Activity {
     private EditText mEditName;
     private Spinner mTimes;
     private Spinner mInterval;
-    private TextView mRepeatabilityTv;
+    private TextView mRepeatability;
+    private TextView mRingtone;
     private Button mOkButton;
     private Button mCancelButton;
 
@@ -56,23 +61,18 @@ public class AlarmEditActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String name = mEditName.getText().toString().trim();
+                String ringtone = mRingtone.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(AlarmEditActivity.this,
-                            R.string.pls_enter_name, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlarmEditActivity.this, R.string.pls_enter_name, Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(ringtone)) {
+                    Toast.makeText(AlarmEditActivity.this, R.string.pls_enter_ringtone, Toast.LENGTH_SHORT).show();
                 } else {
                     if (mAlarmId == NO_ALARM_ID) {
-                        mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(),
-                                mTimePicker.getCurrentMinute(),
-                                mTimes.getSelectedItemPosition(),
-                                mInterval.getSelectedItemPosition(),
-                                mInfo.repeatability);
+                        mDBHelper.newAlarm(name, mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute(), mTimes.getSelectedItemPosition(),
+                                mInterval.getSelectedItemPosition(), mInfo.repeatability, true, mInfo.ringtone);
                     } else {
-                        mDBHelper.modifyAlarm(mAlarmId, name,
-                                mTimePicker.getCurrentHour(),
-                                mTimePicker.getCurrentMinute(),
-                                mTimes.getSelectedItemPosition(),
-                                mInterval.getSelectedItemPosition(),
-                                mInfo.repeatability);
+                        mDBHelper.modifyAlarm(mAlarmId, name, mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute(),
+                                mTimes.getSelectedItemPosition(), mInterval.getSelectedItemPosition(), mInfo.repeatability, true, mInfo.ringtone);
                     }
                     finish();
                 }
@@ -92,11 +92,19 @@ public class AlarmEditActivity extends Activity {
         mInterval = (Spinner) findViewById(R.id.interval);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
         // mTimePicker.setIs24HourView(true);
-        mRepeatabilityTv = (TextView) findViewById(R.id.repeatability);
-        mRepeatabilityTv.setOnClickListener(new OnClickListener() {
+        mRepeatability = (TextView) findViewById(R.id.repeatability);
+        mRepeatability.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showRepeatabilityDialog();
+            }
+        });
+
+        mRingtone = (TextView) findViewById(R.id.ringtone);
+        mRingtone.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setRingtone();
             }
         });
     }
@@ -105,7 +113,7 @@ public class AlarmEditActivity extends Activity {
         if (mAlarmId == NO_ALARM_ID) {
             mInfo = new AlarmInfo();
             mInfo.repeatability = AlarmInfo.NO_REPEAT;
-            mRepeatabilityTv.setText(R.string.no_repeat);
+            mRepeatability.setText(R.string.no_repeat);
 
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -121,11 +129,9 @@ public class AlarmEditActivity extends Activity {
                 mTimes.setSelection(mInfo.times);
                 mInterval.setSelection(mInfo.interval);
 
-                mSelectedItems = RepeatabilityHelper
-                        .parseRepeatability(mInfo.repeatability);
-                mRepeatabilityTv.setText(RepeatabilityHelper
-                        .genRepeatabilityString(getApplicationContext(),
-                                mSelectedItems));
+                mSelectedItems = RepeatabilityHelper.parseRepeatability(mInfo.repeatability);
+                mRepeatability.setText(RepeatabilityHelper.genRepeatabilityString(getApplicationContext(), mSelectedItems));
+                mRingtone.setText(Uri.parse(mInfo.ringtone).getLastPathSegment());
             }
         }
     }
@@ -133,28 +139,45 @@ public class AlarmEditActivity extends Activity {
     private void showRepeatabilityDialog() {
         OnMultiChoiceClickListener listener = new OnMultiChoiceClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which,
-                    boolean isChecked) {
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 mSelectedItems[which] = isChecked;
-                mInfo.repeatability = RepeatabilityHelper
-                        .calcRepeatability(mSelectedItems);
-                mRepeatabilityTv.setText(RepeatabilityHelper
-                        .genRepeatabilityString(getApplicationContext(),
-                                mSelectedItems));
+                mInfo.repeatability = RepeatabilityHelper.calcRepeatability(mSelectedItems);
+                mRepeatability.setText(RepeatabilityHelper.genRepeatabilityString(getApplicationContext(), mSelectedItems));
             }
         };
 
         if (mAlarmId == NO_ALARM_ID) {
             mSelectedItems = new boolean[] { false, false, false };
         } else {
-            mSelectedItems = RepeatabilityHelper
-                    .parseRepeatability(mInfo.repeatability);
+            mSelectedItems = RepeatabilityHelper.parseRepeatability(mInfo.repeatability);
         }
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.choose_alarm_repeatability)
-                .setMultiChoiceItems(R.array.alarm_repeatability,
-                        mSelectedItems, listener).create();
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.choose_alarm_repeatability)
+                .setMultiChoiceItems(R.array.alarm_repeatability, mSelectedItems, listener).create();
         dialog.show();
     }
+
+    private void setRingtone() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*");
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            String[] projection = { MediaStore.Images.Media.DATA };
+            Cursor cursor = managedQuery(uri, projection, null, null, null);
+            if (cursor != null) {
+                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    String ringtone = cursor.getString(index);
+                    mInfo.ringtone = ringtone;
+                    mRingtone.setText(Uri.parse(ringtone).getLastPathSegment());
+                }
+            }
+        }
+    }
+
 }

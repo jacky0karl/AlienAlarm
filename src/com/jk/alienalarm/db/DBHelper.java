@@ -19,8 +19,7 @@ public class DBHelper {
         mContext = context;
     }
 
-    public void newAlarm(String name, int hour, int minute, int times,
-            int interval, int repeatability) {
+    public void newAlarm(String name, int hour, int minute, int times, int interval, int repeatability, boolean vibrate, String ringtone) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.IS_ENABLE, 1);
@@ -29,16 +28,16 @@ public class DBHelper {
         values.put(AlarmTable.TIMES, times);
         values.put(AlarmTable.INTERVAL, interval);
         values.put(AlarmTable.REPEATABILTTY, repeatability);
+        values.put(AlarmTable.VIBRATE, repeatability);
+        values.put(AlarmTable.RINGTONE, ringtone);
 
-        Uri uri = mContext.getContentResolver().insert(AlarmTable.CONTENT_URI,
-                values);
+        Uri uri = mContext.getContentResolver().insert(AlarmTable.CONTENT_URI, values);
         ContentUris.parseId(uri);
     }
 
     public boolean deleteAlarm(long id) {
         String selection = AlarmTable._ID + "=" + id;
-        int ret = mContext.getContentResolver().delete(AlarmTable.CONTENT_URI,
-                selection, null);
+        int ret = mContext.getContentResolver().delete(AlarmTable.CONTENT_URI, selection, null);
 
         if (ret > 0) {
             return true;
@@ -47,8 +46,7 @@ public class DBHelper {
         }
     }
 
-    public int modifyAlarm(long id, String name, int hour, int minute,
-            int times, int interval, int repeatability) {
+    public int modifyAlarm(long id, String name, int hour, int minute, int times, int interval, int repeatability, boolean vibrate, String ringtone) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.NAME, name);
         values.put(AlarmTable.HOUR, hour);
@@ -56,25 +54,24 @@ public class DBHelper {
         values.put(AlarmTable.TIMES, times);
         values.put(AlarmTable.INTERVAL, interval);
         values.put(AlarmTable.REPEATABILTTY, repeatability);
+        values.put(AlarmTable.VIBRATE, repeatability);
+        values.put(AlarmTable.RINGTONE, ringtone);
 
         String selection = AlarmTable._ID + "=" + id;
-        return mContext.getContentResolver().update(AlarmTable.CONTENT_URI,
-                values, selection, null);
+        return mContext.getContentResolver().update(AlarmTable.CONTENT_URI, values, selection, null);
     }
 
     public int setAlarmEnable(long id, boolean enable) {
         ContentValues values = new ContentValues();
         values.put(AlarmTable.IS_ENABLE, enable ? 1 : 0);
         String selection = AlarmTable._ID + "=" + id;
-        return mContext.getContentResolver().update(AlarmTable.CONTENT_URI,
-                values, selection, null);
+        return mContext.getContentResolver().update(AlarmTable.CONTENT_URI, values, selection, null);
     }
 
     public AlarmInfo getAlarm(long id) {
         AlarmInfo info = null;
         String selection = AlarmTable._ID + "=" + id;
-        Cursor cursor = mContext.getContentResolver().query(
-                AlarmTable.CONTENT_URI, null, selection, null, null);
+        Cursor cursor = mContext.getContentResolver().query(AlarmTable.CONTENT_URI, null, selection, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 info = fillAlarmInfo(cursor);
@@ -92,8 +89,7 @@ public class DBHelper {
 
         List<AlarmInfo> alarmList = new ArrayList<AlarmInfo>();
         ContentResolver resolver = mContext.getContentResolver();
-        Cursor cursor = resolver.query(AlarmTable.CONTENT_URI, null, selection,
-                null, null);
+        Cursor cursor = resolver.query(AlarmTable.CONTENT_URI, null, selection, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
@@ -128,16 +124,15 @@ public class DBHelper {
     private AlarmInfo fillAlarmInfo(Cursor cursor) {
         AlarmInfo info = new AlarmInfo();
         info.id = cursor.getLong(cursor.getColumnIndex(AlarmTable._ID));
-        info.isEnable = (cursor.getInt(cursor
-                .getColumnIndex(AlarmTable.IS_ENABLE)) == 1) ? true : false;
+        info.isEnable = (cursor.getInt(cursor.getColumnIndex(AlarmTable.IS_ENABLE)) == 1) ? true : false;
         info.name = cursor.getString(cursor.getColumnIndex(AlarmTable.NAME));
         info.hour = cursor.getInt(cursor.getColumnIndex(AlarmTable.HOUR));
         info.minute = cursor.getInt(cursor.getColumnIndex(AlarmTable.MINUTE));
         info.times = cursor.getInt(cursor.getColumnIndex(AlarmTable.TIMES));
-        info.interval = cursor.getInt(cursor
-                .getColumnIndex(AlarmTable.INTERVAL));
-        info.repeatability = cursor.getInt(cursor
-                .getColumnIndex(AlarmTable.REPEATABILTTY));
+        info.interval = cursor.getInt(cursor.getColumnIndex(AlarmTable.INTERVAL));
+        info.repeatability = cursor.getInt(cursor.getColumnIndex(AlarmTable.REPEATABILTTY));
+        info.vibrate = (cursor.getInt(cursor.getColumnIndex(AlarmTable.VIBRATE)) == 1) ? true : false;
+        info.ringtone = cursor.getString(cursor.getColumnIndex(AlarmTable.RINGTONE));
         info.nextAlarmDate = info.getDateAndTime(false);
         return info;
     }

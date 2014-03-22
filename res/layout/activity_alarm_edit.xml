@@ -84,11 +84,30 @@
             android:layout_alignRight="@id/name"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/ringtone_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/name"
+            android:layout_below="@+id/repeatability_lable"
+            android:layout_marginTop="30dp"
+            android:text="@string/ringtone"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/ringtone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/ringtone_lable"
+            android:layout_alignRight="@id/name"
+            android:hint="@string/choose_ringtone"
+            android:textSize="18sp" />
+
         <Button
             android:id="@+id/cancel_button"
             style="@style/Button"
             android:layout_alignLeft="@+id/name"
-            android:layout_below="@+id/repeatability_lable"
+            android:layout_below="@+id/ringtone_lable"
             android:layout_marginTop="30dp"
             android:text="@string/cancel" />
 

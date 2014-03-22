@@ -4,8 +4,10 @@ import android.media.MediaPlayer;
 
 public class SoundAction implements AlarmAction {
     private MediaPlayer mMediaPlayer = null;
+    private String mRingtone;
 
-    public SoundAction() {
+    public SoundAction(String ringtone) {
+        mRingtone = ringtone;
         init();
     }
 
@@ -15,8 +17,7 @@ public class SoundAction implements AlarmAction {
         mMediaPlayer.setLooping(true);
         mMediaPlayer.reset();
         try {
-            mMediaPlayer
-                    .setDataSource("/storage/sdcard1/music/Adele/Set Fire to the Rain.mp3");
+            mMediaPlayer.setDataSource(mRingtone);
             mMediaPlayer.prepare();
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,9 +17,12 @@
     <string name="everyday">Everyday</string>
     <string name="saving_fail">Saving fail</string>
     <string name="pls_enter_name">Please enter a name for alarm</string>
+    <string name="pls_enter_ringtone">Please choose a ringtone for alarm</string>
     <string name="times">Times</string>
     <string name="interval">Interval</string>
     <string name="repeatability">Repeatability</string>
+    <string name="ringtone">Ringtone</string>
+    <string name="choose_ringtone">Choose Ringtone</string>
     <string name="choose_alarm_times">Choose Alarm Times</string>
     <string name="choose_alarm_interval">Choose Alarm Interval</string>
     <string name="choose_alarm_repeatability">Choose Alarm Repeatability</string>
