@@ -36,9 +36,9 @@ public class AlarmInfo {
     public int repeatability = NO_REPEAT;
     public long nextAlarmDate;
 
-    public long getDateAndTime(boolean isRealarm) {
+    public long getDateAndTime(boolean isReAlarm) {
         Calendar calendar = null;
-        if (isRealarm) {
+        if (isReAlarm) {
             calendar = Calendar.getInstance(TimeZone.getDefault());
             calendar.setTimeInMillis(System.currentTimeMillis());
         } else {

@@ -110,7 +110,7 @@ public class NotifyActivity extends Activity {
 
         AlarmImpl.getInstance().wakeScreen();
         if (mLastAlarm) {
-            AlarmImpl.getInstance().cancelAlarm(mAlarmInfo.id);
+            AlarmImpl.getInstance().updateAlarm(mAlarmInfo.id);
         } else {
             AlarmImpl.getInstance().resetAlarm(mAlarmInfo, mAlarmTime);
         }
@@ -153,7 +153,6 @@ public class NotifyActivity extends Activity {
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
-            AlarmImpl.getInstance().updateAlarm(mAlarmInfo.id);
             finish();
         }
     };

@@ -42,8 +42,7 @@ public class AlarmImpl {
     public void setContext(Context context) {
         mContext = context;
         mDBhelper = new DBHelper(context);
-        mAlarmMgr = (AlarmManager) mContext
-                .getSystemService(Context.ALARM_SERVICE);
+        mAlarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }
 
     public void updatePendingIntent(long id, PendingIntent intent) {
@@ -73,8 +72,7 @@ public class AlarmImpl {
             return;
         }
 
-        PendingIntent alarmIntent = AlarmImpl.getInstance().getPendingIntent(
-                info, alarmTime + 1);
+        PendingIntent alarmIntent = AlarmImpl.getInstance().getPendingIntent(info, alarmTime + 1);
         AlarmImpl.getInstance().updatePendingIntent(info.id, alarmIntent);
 
         long plusTime = 0;
@@ -106,14 +104,15 @@ public class AlarmImpl {
         intent.setData(data);
         intent.putExtra(NotifyActivity.ALARM_ID, info.id);
         intent.putExtra(NotifyActivity.ALARM_TIME, alarmTime);
-        return PendingIntent.getActivity(mContext, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public AlarmInfo getInfoById(long id) {
         for (int i = 0; i < mAlarmList.size(); i++) {
             if (mAlarmList.get(i).id == id) {
-                return mAlarmList.get(i);
+                AlarmInfo info = mAlarmList.get(i);
+                info.nextAlarmDate = info.getDateAndTime(false);
+                return info;
             }
         }
         return null;
@@ -131,21 +130,19 @@ public class AlarmImpl {
 
         for (int i = 0; i < mAlarmList.size(); i++) {
             AlarmInfo info = mAlarmList.get(i);
+            info.nextAlarmDate = info.getDateAndTime(false);
             if (info.nextAlarmDate != AlarmInfo.DEAD_ALARM) {
                 PendingIntent intent = getPendingIntent(info, 0);
                 mIntentMap.put(info.id, intent);
-                mAlarmMgr.set(AlarmManager.RTC_WAKEUP, info.nextAlarmDate,
-                        intent);
+                mAlarmMgr.set(AlarmManager.RTC_WAKEUP, info.nextAlarmDate, intent);
             }
         }
     }
 
     public void wakeScreen() {
-        PowerManager pm = (PowerManager) mContext
-                .getSystemService(Context.POWER_SERVICE);
-        WakeLock lock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                | PowerManager.ON_AFTER_RELEASE, "jk");
+        PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        WakeLock lock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
+                "jk");
         lock.acquire(5000);
     }
 
