@@ -18,6 +18,7 @@
     <string name="saving_fail">Saving fail</string>
     <string name="pls_enter_name">Please enter a name for alarm</string>
     <string name="pls_enter_ringtone">Please choose a ringtone for alarm</string>
+    <string name="invalid_file">The file you chosen is invalid</string>
     <string name="times">Times</string>
     <string name="interval">Interval</string>
     <string name="repeatability">Repeatability</string>

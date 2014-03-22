@@ -166,18 +166,33 @@ public class AlarmEditActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
-            String[] projection = { MediaStore.Images.Media.DATA };
-            Cursor cursor = managedQuery(uri, projection, null, null, null);
-            if (cursor != null) {
-                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                if (cursor.moveToFirst()) {
-                    String ringtone = cursor.getString(index);
-                    mInfo.ringtone = ringtone;
-                    mRingtone.setText(Uri.parse(ringtone).getLastPathSegment());
-                }
+            String ringtone = uriToFilePath(data.getData());
+            if (ringtone != null) {
+                mInfo.ringtone = ringtone;
+                mRingtone.setText(Uri.parse(ringtone).getLastPathSegment());
+            } else {
+                Toast.makeText(this, R.string.invalid_file, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    private String uriToFilePath(Uri uri) {
+        String scheme = uri.getScheme();
+        if (scheme.equals("file")) {
+            return uri.toString();
+        } else if (scheme.equals("content")) {
+            String[] projection = { MediaStore.Audio.Media.DATA };
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                    return cursor.getString(index);
+                }
+                cursor.close();
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
 }
