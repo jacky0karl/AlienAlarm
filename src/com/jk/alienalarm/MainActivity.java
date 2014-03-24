@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
     // setting: alarm length
     // setting: theme dark or light
 
+    private TextView mLable;
     private TextView mNextAlarmName;
     private TextView mNextAlarmTime;
     private DBHelper mDBHelper;
@@ -46,6 +47,7 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
+        mLable = (TextView) findViewById(R.id.lable);
         mNextAlarmName = (TextView) findViewById(R.id.alarm_name);
         mNextAlarmTime = (TextView) findViewById(R.id.alarm_time);
         mDBHelper = new DBHelper(this);
@@ -59,8 +61,13 @@ public class MainActivity extends Activity {
             calendar.setTimeInMillis(mNextAlarm.nextAlarmDate);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String date = sdf.format(calendar.getTime());
+            mLable.setText(R.string.next_alarm);
             mNextAlarmName.setText(mNextAlarm.name);
             mNextAlarmTime.setText(date);
+        } else {
+            mLable.setText(R.string.no_alarm);
+            mNextAlarmName.setText("");
+            mNextAlarmTime.setText("");
         }
     }
 
