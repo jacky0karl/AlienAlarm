@@ -6,12 +6,16 @@ import java.util.TimeZone;
 import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
 import com.jk.alienalarm.db.RepeatabilityHelper;
+import com.jk.alienalarm.impl.PreferencesUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -118,6 +122,11 @@ public class AlarmEditActivity extends Activity {
             mInfo.repeatability = AlarmInfo.NO_REPEAT;
             mRepeatability.setText(R.string.no_repeat);
 
+            long currIndex = getAlarmIndex();
+            setAlarmIndex(currIndex + 1);
+            String name = getString(R.string.alarm) + currIndex;
+            mEditName.setText(name);
+
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
@@ -206,5 +215,16 @@ public class AlarmEditActivity extends Activity {
         } else {
             return null;
         }
+    }
+
+    private long getAlarmIndex() {
+        SharedPreferences preferences = getSharedPreferences(PreferencesUtil.SETTINGS, Context.MODE_PRIVATE);
+        return preferences.getLong(PreferencesUtil.ALARM_INDEX, 0);
+    }
+
+    private void setAlarmIndex(long index) {
+        Editor editor = PreferencesUtil.getEditor(this);
+        editor.putLong(PreferencesUtil.ALARM_INDEX, index);
+        editor.commit();
     }
 }

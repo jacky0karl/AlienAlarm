@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">AlienAlarm</string>
+    <string name="alarm">alarm</string>
     <string name="enter_name_hint">enter name</string>
     <string name="new_alarm">New</string>
     <string name="alarm_arrived">Alarm Arrived</string>

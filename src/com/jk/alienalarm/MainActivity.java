@@ -19,9 +19,12 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     // To do list
+    
     // notification
-    // flash light
+ 
     // setting: alarm length
+    // setting: vibrate
+    // setting: flash light
     // setting: theme dark or light
 
     private TextView mLable;

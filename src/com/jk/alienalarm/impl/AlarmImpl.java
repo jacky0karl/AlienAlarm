@@ -1,4 +1,4 @@
-package com.jk.alienalarm;
+package com.jk.alienalarm.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
+import com.jk.alienalarm.NotifyActivity;
 import com.jk.alienalarm.db.AlarmInfo;
 import com.jk.alienalarm.db.DBHelper;
 

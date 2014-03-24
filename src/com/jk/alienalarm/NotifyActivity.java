@@ -7,6 +7,7 @@ import com.jk.alienalarm.action.AlarmAction;
 import com.jk.alienalarm.action.SoundAction;
 import com.jk.alienalarm.action.VibrationAction;
 import com.jk.alienalarm.db.AlarmInfo;
+import com.jk.alienalarm.impl.AlarmImpl;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
