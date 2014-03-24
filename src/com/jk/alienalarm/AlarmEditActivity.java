@@ -14,7 +14,10 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -181,8 +184,17 @@ public class AlarmEditActivity extends Activity {
         if (scheme.equals("file")) {
             return uri.toString();
         } else if (scheme.equals("content")) {
+            Uri queryUri = uri;
             String[] projection = { MediaStore.Audio.Media.DATA };
-            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            String selection = null;
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(this, uri)) {
+                String wholeID = DocumentsContract.getDocumentId(uri);
+                String id = wholeID.split(":")[1];
+                queryUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                selection = MediaStore.Audio.Media._ID + "=" + id;
+            }
+
+            Cursor cursor = getContentResolver().query(queryUri, projection, selection, null, null);
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
